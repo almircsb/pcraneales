@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aprende los Pares Craneales</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen flex justify-center items-start py-8">
+    <div class="bg-white rounded-lg shadow-md p-8 w-full max-w-lg">
+        <h1 class="text-2xl font-semibold text-blue-600 mb-6 text-center">Aprende los Pares Craneales</h1>
+        <div id="pregunta-container" class="mb-6">
+            </div>
+        <div id="respuestas-container" class="mb-4 space-y-2">
+            </div>
+        <div id="mensaje-container" class="mb-4 text-center font-medium">
+            </div>
+        <div class="flex justify-center space-x-4">
+            <button id="siguiente-btn" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded disabled:opacity-50" disabled>Siguiente Pregunta</button>
+            <button id="reiniciar-btn" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded hidden">Reiniciar Juego</button>
+        </div>
+        <div id="puntuacion-container" class="mt-6 text-center text-lg font-semibold text-gray-700">
+            Puntuación: <span id="puntuacion">0</span>
+        </div>
+    </div>
+
+    <script>
+        const preguntas = [
+            {
+                pregunta: "¿Qué nervio craneal transmite los impulsos olfatorios desde la mucosa nasal al cerebro?",
+                respuestaCorrecta: "b",
+                opciones: {
+                    a: "Nervio Óptico (II)",
+                    b: "Nervio Olfatorio (I)",
+                    c: "Nervio Vestibulococlear (VIII)"
+                }
+            },
+            {
+                pregunta: "¿Cuál es la función principal del Nervio Óptico (II)?",
+                respuestaCorrecta: "b",
+                opciones: {
+                    a: "Detectar sabores en la lengua",
+                    b: "Transmitir información visual al cerebro",
+                    c: "Controlar los músculos de la masticación"
+                }
+            },
+            {
+                pregunta: "¿Qué nervio está involucrado en los sentidos de la audición y el equilibrio?",
+                respuestaCorrecta: "c",
+                opciones: {
+                    a: "Nervio Facial (VII)",
+                    b: "Nervio Glosofaríngeo (IX)",
+                    c: "Nervio Vestibulococlear (VIII)"
+                }
+            },
+            {
+                pregunta: "¿Cuál controla la mayoría de los músculos que mueven el globo ocular?",
+                respuestaCorrecta: "b",
+                opciones: {
+                    a: "Nervio Troclear (IV)",
+                    b: "Nervio Oculomotor (III)",
+                    c: "Nervio Abducens (VI)"
+                }
+            },
+            {
+                pregunta: "¿Qué músculo del ojo es inervado por el Nervio Troclear (IV)?",
+                respuestaCorrecta: "b",
+                opciones: {
+                    a: "Recto externo",
+                    b: "Oblicuo superior",
+                    c: "Recto interno"
+                }
+            },
+            {
+                pregunta: "¿Qué movimiento ocular permite el Nervio Abducens (VI)?",
+                respuestaCorrecta: "b",
+                opciones: {
+                    a: "Rotación externa",
+                    b: "Abducción (movimiento hacia afuera)",
+                    c: "Elevación del párpado superior"
+                }
+            },
+            {
+                pregunta: "¿Cuál es la función sensitiva principal del Nervio Trigémino (V)?",
+                respuestaCorrecta: "b",
+                opciones: {
+                    a: "Gusto en la parte posterior de la lengua",
+                    b: "Sensibilidad de la cara",
+                    c: "Audición en el oído interno"
+                }
+            },
+            {
+                pregunta: "¿Qué músculos son inervados por la rama motora del Trigémino (V)?",
+                respuestaCorrecta: "b",
+                opciones: {
+                    a: "Músculos faciales",
+                    b: "Músculos de la masticación",
+                    c: "Músculos de la lengua"
+                }
+            },
+            {
+                pregunta: "¿Qué sentido especial transmite el Nervio Facial (VII) desde los dos tercios anteriores de la lengua?",
+                respuestaCorrecta: "c",
+                opciones: {
+                    a: "Tacto",
+                    b: "Temperatura",
+                    c: "Gusto"
+                }
+            },
+            {
+                pregunta: "¿Qué función motora cumple el Nervio Facial (VII)?",
+                respuestaCorrecta: "a",
+                opciones: {
+                    a: "Control de los músculos de la expresión facial",
+                    b: "Movimiento de la lengua",
+                    c: "Movimiento del cuello"
+                }
+            },
+            {
+                pregunta: "¿Qué sentido especial transmite el Glosofaríngeo (IX) desde el tercio posterior de la lengua?",
+                respuestaCorrecta: "c",
+                opciones: {
+                    a: "Olfato",
+                    b: "Visión",
+                    c: "Gusto"
+                }
+            },
+            {
+                pregunta: "¿Qué grupo muscular inerva el Glosofaríngeo (IX)?",
+                respuestaCorrecta: "b",
+                opciones: {
+                    a: "Músculos de la masticación",
+                    b: "Músculos de la faringe",
+                    c: "Músculos del globo ocular"
+                }
+            },
+            {
+                pregunta: "¿Qué nervio tiene funciones parasimpáticas en múltiples vísceras torácicas y abdominales?",
+                respuestaCorrecta: "c",
+                opciones: {
+                    a: "Nervio Facial (VII)",
+                    b: "Nervio Glosofaríngeo (IX)",
+                    c: "Nervio Vago (X)"
+                }
+            },
+            {
+                pregunta: "¿Qué músculos son inervados por el Nervio Accesorio (XI)?",
+                respuestaCorrecta: "b",
+                opciones: {
+                    a: "Músculos de la laringe",
+                    b: "Esternocleidomastoideo y trapecio",
+                    c: "Músculos de la masticación"
+                }
+            },
+            {
+                pregunta: "¿Cuál es la función principal del Hipogloso (XII)?",
+                respuestaCorrecta: "b",
+                opciones: {
+                    a: "Sensibilidad de la lengua",
+                    b: "Control de los músculos de la lengua",
+                    c: "Gusto en la lengua"
+                }
+            },
+            {
+                pregunta: "¿Qué efecto parasimpático tiene el Oculomotor (III) en el ojo?",
+                respuestaCorrecta: "b",
+                opciones: {
+                    a: "Producción de lágrimas",
+                    b: "Contracción de la pupila (miosis)",
+                    c: "Movimiento hacia afuera del ojo"
+                }
+            },
+            {
+                pregunta: "¿Qué glándulas salivales estimula el Nervio Facial (VII)?",
+                respuestaCorrecta: "b",
+                opciones: {
+                    a: "Glándula parótida",
+                    b: "Glándulas submaxilar y sublingual",
+                    c: "Glándulas lagrimales únicamente"
+                }
+            },
+            {
+                pregunta: "¿Qué glándula salival es estimulada por el Glosofaríngeo (IX)?",
+                respuestaCorrecta: "a",
+                opciones: {
+                    a: "Glándula parótida",
+                    b: "Glándula sublingual",
+                    c: "Glándula lagrimal"
+                }
+            },
+            {
+                pregunta: "¿Qué función sensitiva cumple el Vago (X) en la laringe y la tráquea?",
+                respuestaCorrecta: "b",
+                opciones: {
+                    a: "Gusto",
+                    b: "Sensibilidad",
+                    c: "Olfato"
+                }
+            },
+            {
+                pregunta: "¿Qué pares craneales participan en el movimiento ocular?",
+                respuestaCorrecta: "b",
+                opciones: {
+                    a: "I, II y VIII",
+                    b: "III, IV y VI",
+                    c: "V, VII y IX"
+                }
+            },
+            {
+                pregunta: "¿Cuál transmite impulsos auditivos?",
+                respuestaCorrecta: "b",
+                opciones: {
+                    a: "Nervio Óptico (II)",
+                    b: "Nervio Vestibulococlear (VIII)",
+                    c: "Nervio Facial (VII)"
+                }
+            },
+            {
+                pregunta: "¿Qué nervio transmite información del equilibrio?",
+                respuestaCorrecta: "b",
+                opciones: {
+                    a: "Glosofaríngeo (IX)",
+                    b: "Vestibulococlear (VIII)",
+                    c: "Hipogloso (XII)"
+                }
+            },
+            {
+                pregunta: "¿Cuál no tiene función motora ocular?",
+                respuestaCorrecta: "c",
+                opciones: {
+                    a: "Oculomotor (III)",
+                    b: "Troclear (IV)",
+                    c: "Olfatorio (I)"
+                }
+            },
+            {
+                pregunta: "¿Qué nervio recoge la sensibilidad del tercio posterior de la lengua (no gusto)?",
+                respuestaCorrecta: "b",
+                opciones: {
+                    a: "Facial (VII)",
+                    b: "Glosofaríngeo (IX)",
+                    c: "Vago (X)"
+                }
+            },
+            {
+                pregunta: "¿Quién inerva el músculo recto interno del ojo?",
+                respuestaCorrecta: "c",
+                opciones: {
+                    a: "Abducens (VI)",
+                    b: "Troclear (IV)",
+                    c: "Oculomotor (III)"
+                }
+            },
+            {
+                pregunta: "¿Quién inerva el recto superior del ojo?",
+                respuestaCorrecta: "c",
+                opciones: {
+                    a: "Troclear (IV)",
+                    b: "Abducens (VI)",
+                    c: "Oculomotor (III)"
+                }
+            },
+            {
+                pregunta: "¿Qué nervio inerva el recto inferior del ojo?",
+                respuestaCorrecta: "c",
+                opciones: {
+                    a: "Troclear (IV)",
+                    b: "Abducens (VI)",
+                    c: "Oculomotor (III)"
+                }
+            },
+            {
+                pregunta: "¿Qué nervio inerva el oblicuo inferior del ojo?",
+                respuestaCorrecta: "c",
+                opciones: {
+                    a: "Troclear (IV)",
+                    b: "Abducens (VI)",
+                    c: "Oculomotor (III)"
+                }
+            },
+            {
+                pregunta: "¿Qué nervio permite la rotación interna del ojo hacia la nariz?",
+                respuestaCorrecta: "a",
+                opciones: {
+                    a: "Troclear (IV)",
+                    b: "Abducens (VI)",
+                    c: "Oculomotor (III)"
+                }
+            },
+            {
+                pregunta: "¿Qué nervio permite la rotación externa del ojo?",
+                respuestaCorrecta: "b",
+                opciones: {
+                    a: "Troclear (IV)",
+                    b: "Abducens (VI)",
+                    c: "Oculomotor (III)"
+                }
+            },
+            {
+                pregunta: "¿Cuál de estos nervios es puramente sensorial?",
+                respuestaCorrecta: "c",
+                opciones: {
+                    a: "Trigémino (V)",
+                    b: "Facial (VII)",
+                    c: "Óptico (II)"
+                }
+            },
+            {
+                pregunta: "¿Cuál es principalmente motor?",
+                respuestaCorrecta: "b",
+                opciones: {
+                    a: "Facial (VII)",
+                    b: "Hipogloso (XII)",
+                    c: "Glosofaríngeo (IX)"
+                }
+            },
+            {
+                pregunta: "¿Cuál de estos es mixto (motor y sensitivo)?",
+                respuestaCorrecta: "b",
+                opciones: {
+                    a: "Abducens (VI)",
+                    b: "Trigémino (V)",
+                    c: "Óptico (II)"
+                }
+            },
+            {
+                pregunta: "¿Qué nervios llevan fibras parasimpáticas?",
+                respuestaCorrecta: "b",
+                opciones: {
+                    a: "I, II, VIII y XI",
+                    b: "III, VII, IX y X",
+                    c: "V, VI, XI y XII"
+                }
+            },
+            {
+                pregunta: "¿Dónde capta el gusto el Glosofaríngeo (IX)?",
+                respuestaCorrecta: "b",
+                opciones: {
+                    a: "Dos tercios anteriores",
+                    b: "Tercio posterior",
+                    c: "Toda la superficie"
+                }
+            },
+            {
+                pregunta: "¿Qué nervios participan en la deglución?",
+                respuestaCorrecta: "b",
+                opciones: {
+                    a: "Facial (VII)",
+                    b: "Glosofaríngeo (IX) y Vago (X)",
+                    c: "Hipogloso (XII)"
+                }
+            },
+            {
+                pregunta: "¿Qué nervio se relaciona con la producción de la voz (fonación)?",
+                respuestaCorrecta: "b",
+                opciones: {
+                    a: "Facial (VII)",
+                    b: "Vago (X)",
+                    c: "Hipogloso (XII)"
+                }
+            },
+            {
+                pregunta: "¿Qué nervio mueve cabeza y hombros?",
+                respuestaCorrecta: "b",
+                opciones: {
+                    a: "Vago (X)",
+                    b: "Accesorio (XI)",
+                    c: "Hipogloso (XII)"
+                }
+            },
+            {
+                pregunta: "¿Qué par craneal es una prolongación del prosencéfalo sin núcleos en el tronco encefálico?",
+                respuestaCorrecta: "b",
+                opciones: {
+                    a: "Oculomotor (III)",
+                    b: "Olfatorio (I)",
+                    c: "Trigémino (V)"
+                }
+            },
+            {
+                pregunta: "¿Qué otro nervio, además del I, se considera parte del prosencéfalo?",
+                respuestaCorrecta: "b",
+                opciones: {
+                    a: "Facial (VII)",
+                    b: "Óptico (II)",
+                    c: "Vago (X)"
+                }
+            },
+            {
+                pregunta: "¿Cuál es la función del nervio terminal (par craneal 0 o XIII)?",
+                respuestaCorrecta: "a",
+                opciones: {
+                    a: "Captación de feromonas",
+                    b: "Control de músculos faciales",
+                    c: "Transmisión visual"
+                }
+            },
+            {
+                pregunta: "¿Qué nervio inerva el músculo elevador del párpado superior?",
+                respuestaCorrecta: "a",
+                opciones: {
+                    a: "Oculomotor (III)",
+                    b: "Troclear (IV)",
+                    c: "Abducens (VI)"
+                }
+            },
+            {
+                pregunta: "¿Quién da sensibilidad a la cavidad bucal?",
+                respuestaCorrecta: "b",
+                opciones: {
+                    a: "Facial (VII)",
+                    b: "Trigémino (V)",
+                    c: "Glosofaríngeo (IX)"
+                }
+            },
+            {
+                pregunta: "¿Qué nervios dan sensibilidad al pabellón auricular?",
+                respuestaCorrecta: "b",
+                opciones: {
+                    a: "Facial (VII)",
+                    b: "Trigémino (V) y Vago (X)",
+                    c: "Glosofaríngeo (IX)"
+                }
+            },
+            {
+                pregunta: "¿Qué nervio inerva los músculos intrínsecos de la laringe?",
+                respuestaCorrecta: "b",
+                opciones: {
+                    a: "Glosofaríngeo (IX)",
+                    b: "Vago (X)",
+                    c: "Espinal (XI)"
+                }
+            },
+            {
+                pregunta: "¿Qué nervio da sensibilidad a la laringe?",
+                respuestaCorrecta: "b",
+                opciones: {
+                    a: "Glosofaríngeo (IX)",
+                    b: "Vago (X)",
+                    c: "Espinal (XI)"
+                }
+            },
+            {
+                pregunta: "¿Qué nervio inerva el músculo estilofaríngeo?",
+                respuestaCorrecta: "a",
+                opciones: {
+                    a: "Glosofaríngeo (IX)",
+                    b: "Vago (X)",
+                    c: "Facial (VII)"
+                }
+            },
+            {
+                pregunta: "¿Qué nervio mueve la lengua para articular sonidos?",
+                respuestaCorrecta: "c",
+                opciones: {
+                    a: "Facial (VII)",
+                    b: "Vago (X)",
+                    c: "Hipogloso (XII)"
+                }
+            },
+            {
+                pregunta: "¿Qué nervio lleva información gustativa desde la epiglotis?",
+                respuestaCorrecta: "b",
+                opciones: {
+                    a: "Facial (VII)",
+                    b: "Vago (X)",
+                    c: "Glosofaríngeo (IX)"
+                }
+            },
+            {
+                pregunta: "¿Qué nervio se asocia con la detección de olores?",
+                respuestaCorrecta: "a",
+                opciones: {
+                    a: "Olfatorio (I)",
+                    b: "Trigémino (V)",
+                    c: "Facial (VII)"
+                }
+            },
+            {
+                pregunta: "¿Qué nervio puede estar dañado si una persona tiene la voz ronca o débil?",
+                respuestaCorrecta: "b",
+                opciones: {
+                    a: "Glosofaríngeo (IX)",
+                    b: "Vago (X)",
+                    c: "Hipogloso (XII)"
+                }
+            },
+            {
+                pregunta: "Si alguien saca la lengua y esta se va hacia un lado, ¿qué nervio podría estar afectado?",
+                respuestaCorrecta: "c",
+                opciones: {
+                    a: "Glosofaríngeo (IX)",
+                    b: "Vago (X)",
+                    c: "Hipogloso (XII)"
+                }
+            },
+            {
+                pregunta: "Si no se siente nada al tocar el ojo, ¿qué nervio puede estar fallando?",
+                respuestaCorrecta: "a",
+                opciones: {
+                    a: "Trigémino (V)",
+                    b: "Facial (VII)",
+                    c: "Oculomotor (III)"
+                }
+            },
+            {
+                pregunta: "¿Qué nervio permite cerrar el ojo cuando algo lo toca?",
+                respuestaCorrecta: "b",
+                opciones: {
+                    a: "Trigémino (V)",
+                    b: "Facial (VII)",
+                    c: "Oculomotor (III)"
+                }
+            },
+            {
+                pregunta: "Si una persona no puede mover la mitad de su cara, ¿qué nervio probablemente está afectado?",
+                respuestaCorrecta: "b",
+                opciones: {
+                    a: "Glosofaríngeo (IX)",
+                    b: "Facial (VII)",
+                    c: "Trigémino (V)"
+                }
+            },
+            {
+                pregunta: "¿Qué nervio se puede dañar en una cirugía cerca de la glándula parótida?",
+                respuestaCorrecta: "b",
+                opciones: {
+                    a: "Glosofaríngeo (IX)",
+                    b: "Facial (VII)",
+                    c: "Trigémino (V)"
+                }
+            },
+            {
+                pregunta: "¿Qué nervio baja por el cuello y llega hasta el abdomen?",
+                respuestaCorrecta: "b",
+                opciones: {
+                    a: "Hipogloso (XII)",
+                    b: "Vago (X)",
+                    c: "Abducens (VI)"
+                }
+            },
+            {
+                pregunta: "¿Qué nervio ayuda a provocar la sensación de náusea al tocar la garganta?",
+                respuestaCorrecta: "b",
+                opciones: {
+                    a: "Facial (VII)",
+                    b: "Glosofaríngeo (IX)",
+                    c: "Trigémino (V)"
+                }
+            },
+            {
+                pregunta: "Si el ojo no se mueve hacia un lado, ¿qué nervio puede estar lesionado?",
+                respuestaCorrecta: "c",
+                opciones: {
+                    a: "Oculomotor (III)",
+                    b: "Troclear (IV)",
+                    c: "Abducens (VI)"
+                }
+            },
+            {
+                pregunta: "¿Qué nervio puede estar dañado si el párpado se cae, la pupila está dilatada y el ojo se mueve poco?",
+                respuestaCorrecta: "c",
+                opciones: {
+                    a: "Troclear (IV)",
+                    b: "Abducens (VI)",
+                    c: "Oculomotor (III)"
+                }
+            }
+        ];
+
+        let preguntasSeleccionadas = [];
+        let preguntaActualIndex = 0;
+        let puntuacion = 0;
+        let respuestaSeleccionada = null;
+        let preguntaCorrecta = false; // Nuevo estado para controlar si la pregunta se respondió correctamente
+
+        const preguntaContainer = document.getElementById('pregunta-container');
+        const respuestasContainer = document.getElementById('respuestas-container');
+        const mensajeContainer = document.getElementById('mensaje-container');
+        const siguienteBtn = document.getElementById('siguiente-btn');
+        const reiniciarBtn = document.getElementById('reiniciar-btn');
+        const puntuacionContainer = document.getElementById('puntuacion-container');
+        const puntuacionSpan = document.getElementById('puntuacion');
+
+        function seleccionarPreguntasAleatorias() {
+            preguntasSeleccionadas = [];
+            const preguntasDisponibles = [...preguntas];
+            for (let i = 0; i < 10; i++) {
+                const randomIndex = Math.floor(Math.random() * preguntasDisponibles.length);
+                preguntasSeleccionadas.push(preguntasDisponibles.splice(randomIndex, 1)[0]);
+            }
+        }
+
+        function mostrarPregunta() {
+            mensajeContainer.textContent = '';
+            respuestasContainer.innerHTML = '';
+            siguienteBtn.disabled = true;
+            siguienteBtn.classList.add('opacity-50');
+            siguienteBtn.classList.remove('opacity-100');
+            preguntaCorrecta = false; // Reiniciar el estado de la pregunta correcta
+
+            const preguntaActual = preguntasSeleccionadas[preguntaActualIndex];
+            preguntaContainer.textContent = preguntaActual.pregunta;
+
+            for (const opcion in preguntaActual.opciones) {
+                const botonRespuesta = document.createElement('button');
+                botonRespuesta.textContent = `${opcion}. ${preguntaActual.opciones[opcion]}`;
+                botonRespuesta.classList.add('bg-gray-200', 'hover:bg-gray-300', 'text-gray-800', 'font-semibold', 'py-2', 'px-4', 'rounded', 'w-full', 'text-left');
+                botonRespuesta.addEventListener('click', () => seleccionarRespuesta(opcion));
+                respuestasContainer.appendChild(botonRespuesta);
+            }
+        }
+
+        function seleccionarRespuesta(opcion) {
+            respuestaSeleccionada = opcion;
+            const botonesRespuesta = respuestasContainer.querySelectorAll('button');
+            botonesRespuesta.forEach(boton => {
+                boton.classList.remove('bg-gray-200', 'hover:bg-gray-300', 'border-2');
+                boton.classList.add('bg-gray-200', 'text-gray-800');
+            });
+
+            const botonSeleccionado = respuestasContainer.querySelector(`button:nth-child(${Object.keys(preguntasSeleccionadas[preguntaActualIndex].opciones).indexOf(opcion) + 1})`);
+            botonSeleccionado.classList.remove('bg-gray-200', 'text-gray-800');
+            botonSeleccionado.classList.add('bg-blue-100', 'border-2', 'border-blue-500',);
+            siguienteBtn.disabled = false;
+            siguienteBtn.classList.remove('opacity-50');
+            siguienteBtn.classList.add('opacity-100');
+        }
+
+        function verificarRespuesta() {
+            if (respuestaSeleccionada === null) {
+                mensajeContainer.textContent = 'Por favor, selecciona una respuesta.';
+                mensajeContainer.classList.remove('text-green-600', 'text-red-600');
+                mensajeContainer.classList.add('text-yellow-600');
+                return;
+            }
+
+            const preguntaActual = preguntasSeleccionadas[preguntaActualIndex];
+            if (respuestaSeleccionada === preguntaActual.respuestaCorrecta) {
+                mensajeContainer.textContent = '¡Correcto!';
+                mensajeContainer.classList.remove('text-red-600', 'text-yellow-600');
+                mensajeContainer.classList.add('text-green-600');
+                puntuacion += 10;
+                preguntaCorrecta = true; // Marcar la pregunta como correcta
+            } else {
+                mensajeContainer.textContent = '¡Incorrecto!';
+                mensajeContainer.classList.remove('text-green-600', 'text-yellow-600');
+                mensajeContainer.classList.add('text-red-600');
+                puntuacion -= 2;
+                if (puntuacion < 0) puntuacion = 0;
+            }
+            puntuacionSpan.textContent = puntuacion;
+            siguienteBtn.disabled = false;
+            siguienteBtn.classList.remove('opacity-50');
+            siguienteBtn.classList.add('opacity-100');
+        }
+
+        function siguientePregunta() {
+            if (respuestaSeleccionada === null) {
+                mensajeContainer.textContent = 'Por favor, selecciona una respuesta antes de continuar.';
+                mensajeContainer.classList.remove('text-green-600', 'text-red-600');
+                mensajeContainer.classList.add('text-yellow-600');
+                return;
+            }
+
+            verificarRespuesta();
+
+            if (!preguntaCorrecta) {
+                // Si la pregunta no se respondió correctamente, no avanzar a la siguiente pregunta
+                mensajeContainer.textContent = 'Respondecorrectamente para continuar.';
+                return;
+            }
+
+            preguntaActualIndex++;
+            respuestaSeleccionada = null; // Reiniciar la respuesta seleccionada para la siguiente pregunta
+
+
+            if (preguntaActualIndex < preguntasSeleccionadas.length) {
+                mostrarPregunta();
+            } else {
+                mensajeContainer.textContent = `Juego terminado. Puntuación final: ${puntuacion}`;
+                mensajeContainer.classList.remove('text-yellow-600');
+                mensajeContainer.classList.add(puntuacion >= 70 ? 'text-green-600' : 'text-red-600');
+                siguienteBtn.classList.add('hidden');
+                reiniciarBtn.classList.remove('hidden');
+            }
+        }
+
+        function reiniciarJuego() {
+            preguntaActualIndex = 0;
+            puntuacion = 0;
+            puntuacionSpan.textContent = puntuacion;
+            mensajeContainer.textContent = '';
+            mensajeContainer.classList.remove('text-green-600', 'text-red-600', 'text-yellow-600');
+            siguienteBtn.classList.remove('hidden');
+            reiniciarBtn.classList.add('hidden');
+            seleccionarPreguntasAleatorias();
+            mostrarPregunta();
+        }
+
+        siguienteBtn.addEventListener('click', siguientePregunta);
+        reiniciarBtn.addEventListener('click', reiniciarJuego);
+
+        seleccionarPreguntasAleatorias();
+        mostrarPregunta();
+    </script>
+</body>
+</html>
